@@ -1,5 +1,5 @@
-// Drag-to-Connect Mechanic
-// Handles the core interaction of connecting nodes
+// Click-to-Select Mechanic
+// Simplified interaction - just click nodes in order!
 
 class DragConnect {
     constructor(container, runner, onConnectionComplete, onConnectionError) {
@@ -11,31 +11,17 @@ class DragConnect {
         this.nodes = [];
         this.connections = [];
         this.currentPath = [];
-        this.isDragging = false;
-        this.startNode = null;
-        this.tempLine = null;
-
-        this.setupEventListeners();
+        this.targetWord = '';
+        this.mode = '';
     }
 
-    setupEventListeners() {
-        // Mouse events
-        this.container.addEventListener('mousedown', (e) => this.handleStart(e));
-        this.container.addEventListener('mousemove', (e) => this.handleMove(e));
-        this.container.addEventListener('mouseup', (e) => this.handleEnd(e));
-
-        // Touch events
-        this.container.addEventListener('touchstart', (e) => this.handleStart(e));
-        this.container.addEventListener('touchmove', (e) => this.handleMove(e));
-        this.container.addEventListener('touchend', (e) => this.handleEnd(e));
-
-        // Prevent default touch behavior
-        this.container.addEventListener('touchmove', (e) => e.preventDefault(), { passive: false });
-    }
+    // No complex event listeners needed - nodes handle their own clicks
 
     // Add nodes to the board
-    addNodes(nodesData, mode) {
+    addNodes(nodesData, mode, targetWord = '') {
         this.nodes = [];
+        this.mode = mode;
+        this.targetWord = targetWord;
         this.clearContainer();
 
         const lane = document.createElement('div');
@@ -50,6 +36,9 @@ class DragConnect {
             node.dataset.value = data.value;
             node.dataset.correct = data.isCorrect || false;
 
+            // Simple click handler instead of drag
+            node.addEventListener('click', () => this.handleNodeClick(node));
+
             this.nodes.push({
                 element: node,
                 value: data.value,
@@ -63,60 +52,68 @@ class DragConnect {
         this.container.querySelector('.nodes-container').appendChild(lane);
     }
 
-    // Handle start of drag
-    handleStart(event) {
-        const target = this.getNodeFromEvent(event);
-        if (!target || target.classList.contains('disabled')) return;
+    // Handle node click (much simpler than dragging!)
+    handleNodeClick(node) {
+        if (node.classList.contains('disabled')) return;
 
-        event.preventDefault();
-        this.isDragging = true;
-        this.startNode = target;
-        this.currentPath = [target];
+        // Add to current path
+        this.currentPath.push(node);
+        node.classList.add('selected');
 
-        target.classList.add('selected');
+        // Draw connection if not first node
+        if (this.currentPath.length > 1) {
+            const prevNode = this.currentPath[this.currentPath.length - 2];
+            this.drawConnection(prevNode, node);
+        }
 
-        // Move runner to start node
-        const rect = target.getBoundingClientRect();
+        // Move runner
+        const rect = node.getBoundingClientRect();
         const containerRect = this.container.getBoundingClientRect();
-        this.runner.setPosition(
+        this.runner.moveTo(
             rect.left - containerRect.left + rect.width / 2 - 16,
-            rect.top - containerRect.top + rect.height / 2 - 16
+            rect.top - containerRect.top + rect.height / 2 - 16,
+            200
         );
+
+        // Update current selection display
+        this.updateSelectionDisplay();
+
+        // Check if we should auto-submit
+        this.checkAutoSubmit();
     }
 
-    // Handle drag movement
-    handleMove(event) {
-        if (!this.isDragging) return;
+    // Update the selection display
+    updateSelectionDisplay() {
+        const selectionDiv = document.getElementById('current-selection');
+        if (!selectionDiv) return;
 
-        event.preventDefault();
-        const point = this.getEventPoint(event);
+        const separator = this.mode === 'word-sentence' ? ' ' : '';
+        const currentText = this.getCurrentPath().join(separator);
 
-        // Draw temporary line
-        this.drawTempLine(point);
-
-        // Check if hovering over a new node
-        const target = this.getNodeFromPoint(point);
-        if (target && target !== this.currentPath[this.currentPath.length - 1]) {
-            if (!this.currentPath.includes(target) && !target.classList.contains('disabled')) {
-                this.addToPath(target);
-            }
+        if (currentText) {
+            selectionDiv.textContent = currentText.toUpperCase();
+            selectionDiv.style.color = 'var(--color-accent)';
+        } else {
+            selectionDiv.textContent = '(click letters/words below)';
+            selectionDiv.style.color = 'var(--color-text-dim)';
         }
     }
 
-    // Handle end of drag
-    async handleEnd(event) {
-        if (!this.isDragging) return;
+    // Check if we've completed the target and auto-submit
+    checkAutoSubmit() {
+        const currentWord = this.getCurrentPath().join(this.mode === 'word-sentence' ? ' ' : '');
+        const targetLength = this.mode === 'word-sentence'
+            ? this.targetWord.split(' ').length
+            : this.targetWord.length;
 
-        event.preventDefault();
-        this.isDragging = false;
-
-        // Remove temp line
-        if (this.tempLine) {
-            this.tempLine.remove();
-            this.tempLine = null;
+        // Auto-submit when we have enough selections
+        if (this.currentPath.length === targetLength) {
+            setTimeout(() => this.submitAnswer(), 300);
         }
+    }
 
-        // Validate the path
+    // Submit the current answer
+    async submitAnswer() {
         const isValid = await this.validatePath();
 
         if (isValid) {
@@ -139,25 +136,6 @@ class DragConnect {
         setTimeout(() => {
             this.clearPath();
         }, 1000);
-    }
-
-    // Add node to current path
-    addToPath(node) {
-        this.currentPath.push(node);
-        node.classList.add('selected');
-
-        // Draw connection line
-        const prevNode = this.currentPath[this.currentPath.length - 2];
-        this.drawConnection(prevNode, node);
-
-        // Move runner
-        const rect = node.getBoundingClientRect();
-        const containerRect = this.container.getBoundingClientRect();
-        this.runner.moveTo(
-            rect.left - containerRect.left + rect.width / 2 - 16,
-            rect.top - containerRect.top + rect.height / 2 - 16,
-            200
-        );
     }
 
     // Draw connection line between two nodes
@@ -273,11 +251,14 @@ class DragConnect {
         this.connections = this.connections.filter(line => line.classList.contains('correct'));
         this.currentPath = [];
         this.startNode = null;
+
+        // Update display
+        this.updateSelectionDisplay();
     }
 
     // Undo last connection
     undo() {
-        if (this.currentPath.length <= 1) return;
+        if (this.currentPath.length === 0) return;
 
         const lastNode = this.currentPath.pop();
         lastNode.classList.remove('selected');
@@ -299,6 +280,9 @@ class DragConnect {
                 200
             );
         }
+
+        // Update display
+        this.updateSelectionDisplay();
     }
 
     // Helper: Get node element from event

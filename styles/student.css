@@ -332,22 +332,42 @@
 .game-controls {
     width: 100%;
     display: flex;
+    flex-direction: column;
     gap: var(--spacing-md);
-    align-items: center;
     background-color: var(--color-bg-secondary);
     border: 2px solid var(--color-primary);
     padding: var(--spacing-md);
 }
 
 .control-btn {
-    min-width: 100px;
+    min-width: 120px;
+    padding: var(--spacing-md) var(--spacing-lg);
+    font-size: var(--font-size-md);
 }
 
 .target-display {
-    flex: 1;
+    width: 100%;
     text-align: center;
-    color: var(--color-accent);
-    font-size: var(--font-size-md);
+}
+
+/* Current selection display */
+.selection-display {
+    background: var(--color-bg);
+    border: 2px solid var(--color-primary);
+    padding: var(--spacing-md);
+    min-height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--font-size-lg);
+    color: var(--color-primary);
+    margin-bottom: var(--spacing-md);
+}
+
+.controls-row {
+    display: flex;
+    gap: var(--spacing-md);
+    justify-content: center;
 }
 
 /* Feedback Messages */

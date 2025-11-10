@@ -301,10 +301,24 @@
 
             <!-- Controls -->
             <div class="game-controls">
-                <button id="btn-undo" class="control-btn">Undo</button>
-                <button id="btn-hint" class="control-btn">Hint</button>
+                <!-- Target Display (shown by JavaScript) -->
                 <div class="target-display">
-                    <span id="target-text">Target: </span>
+                    <div id="target-text"></div>
+                </div>
+
+                <!-- Current Selection -->
+                <div class="selection-display">
+                    <div style="font-size: 12px; color: var(--color-text-dim); margin-bottom: 5px;">YOUR SELECTION:</div>
+                    <div id="current-selection" style="font-size: 20px; color: var(--color-primary); font-weight: bold; min-height: 30px; letter-spacing: 2px;">
+                        (click letters/words below)
+                    </div>
+                </div>
+
+                <!-- Control Buttons -->
+                <div class="controls-row">
+                    <button id="btn-undo" class="control-btn">↩️ Undo Last</button>
+                    <button id="btn-hint" class="control-btn">💡 Hint (-10pts)</button>
+                    <button id="btn-clear" class="control-btn" style="border-color: var(--color-error); color: var(--color-error);">🔄 Clear All</button>
                 </div>
             </div>
 

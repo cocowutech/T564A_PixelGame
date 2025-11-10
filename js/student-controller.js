@@ -230,7 +230,20 @@ class StudentController {
         if (words.length === 0) return;
 
         this.currentTarget = words[0];
-        document.getElementById('target-text').textContent = `Spell: ${this.currentTarget}`;
+
+        // Show target VERY clearly
+        const targetDisplay = document.getElementById('target-text');
+        targetDisplay.innerHTML = `
+            <div style="text-align: center; padding: 15px; background: var(--color-bg); border: 3px solid var(--color-accent); margin-bottom: 10px;">
+                <div style="font-size: 14px; color: var(--color-text-dim); margin-bottom: 5px;">SPELL THIS WORD:</div>
+                <div style="font-size: 32px; color: var(--color-accent); font-weight: bold; letter-spacing: 4px; text-transform: uppercase;">
+                    ${this.currentTarget}
+                </div>
+                <div style="font-size: 12px; color: var(--color-primary); margin-top: 8px;">
+                    Click letters in order • ${this.currentTarget.length} letters needed
+                </div>
+            </div>
+        `;
 
         // Create letter nodes
         const letters = 'abcdefghijklmnopqrstuvwxyz'.split('');
@@ -241,16 +254,16 @@ class StudentController {
         this.shuffleArray(allLetters);
 
         const nodesData = allLetters.map(letter => ({
-            value: letter,
+            value: letter.toUpperCase(),
             isCorrect: targetLetters.includes(letter)
         }));
 
-        this.dragConnect.addNodes(nodesData, 'alphabet-word');
+        this.dragConnect.addNodes(nodesData, 'alphabet-word', this.currentTarget);
 
         // Override validation for alphabet mode
         this.dragConnect.validatePath = () => {
             const path = this.dragConnect.getCurrentPath();
-            return path.join('') === this.currentTarget;
+            return path.join('').toLowerCase() === this.currentTarget;
         };
     }
 
@@ -260,7 +273,19 @@ class StudentController {
         this.currentTarget = sentences[0];
         const words = this.currentTarget.split(' ').filter(w => w.length > 0);
 
-        document.getElementById('target-text').textContent = `Build the sentence`;
+        // Show target sentence VERY clearly
+        const targetDisplay = document.getElementById('target-text');
+        targetDisplay.innerHTML = `
+            <div style="text-align: center; padding: 15px; background: var(--color-bg); border: 3px solid var(--color-accent); margin-bottom: 10px;">
+                <div style="font-size: 14px; color: var(--color-text-dim); margin-bottom: 5px;">BUILD THIS SENTENCE:</div>
+                <div style="font-size: 24px; color: var(--color-accent); font-weight: bold; line-height: 1.4;">
+                    "${this.currentTarget}"
+                </div>
+                <div style="font-size: 12px; color: var(--color-primary); margin-top: 8px;">
+                    Click words in order • ${words.length} words needed
+                </div>
+            </div>
+        `;
 
         // Shuffle words and add some distractors
         const allWords = [...words, ...this.getDistractorWords(5)];
@@ -271,7 +296,7 @@ class StudentController {
             isCorrect: words.includes(word)
         }));
 
-        this.dragConnect.addNodes(nodesData, 'word-sentence');
+        this.dragConnect.addNodes(nodesData, 'word-sentence', this.currentTarget);
 
         // Show mini-map if sentence is long
         if (words.length > 6) {
@@ -297,6 +322,11 @@ class StudentController {
             this.useHint();
         });
 
+        // Clear button
+        document.getElementById('btn-clear').addEventListener('click', () => {
+            this.dragConnect.clearPath();
+        });
+
         // Keyboard controls
         document.addEventListener('keydown', (e) => {
             if (e.key === 'z' && (e.ctrlKey || e.metaKey)) {
@@ -306,6 +336,10 @@ class StudentController {
             if (e.key === 'h' && (e.ctrlKey || e.metaKey)) {
                 e.preventDefault();
                 this.useHint();
+            }
+            if (e.key === 'Escape') {
+                e.preventDefault();
+                this.dragConnect.clearPath();
             }
         });
     }
