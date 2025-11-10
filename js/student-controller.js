@@ -1,7 +1,5 @@
 // Student Controller
-import gameState from './game-state.js';
-import RunnerAnimation from './runner-animation.js';
-import DragConnect from './drag-connect.js';
+// Uses global gameState, RunnerAnimation, and DragConnect classes
 
 class StudentController {
     constructor() {
@@ -448,4 +446,3 @@ class StudentController {
 }
 
 const studentController = new StudentController();
-export default studentController;

@@ -1,5 +1,5 @@
 // Teacher Controller
-import gameState from './game-state.js';
+// Uses global gameState object
 
 class TeacherController {
     constructor() {
@@ -424,4 +424,3 @@ class TeacherController {
 }
 
 const teacherController = new TeacherController();
-export default teacherController;

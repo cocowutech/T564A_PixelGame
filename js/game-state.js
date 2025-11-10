@@ -1,6 +1,5 @@
 // Game State Management
-import { database } from './firebase-config.js';
-import { ref, set, get, update, onValue, push, remove } from 'firebase/database';
+// Uses Firebase Compat SDK from global scope
 
 class GameState {
     constructor() {
@@ -42,7 +41,7 @@ class GameState {
         };
 
         try {
-            await set(ref(database, `rooms/${this.roomCode}`), roomData);
+            await database.ref(`rooms/${this.roomCode}`).set(roomData);
             return this.roomCode;
         } catch (error) {
             console.error('Error creating room:', error);
@@ -58,7 +57,7 @@ class GameState {
 
         try {
             // Check if room exists
-            const roomSnapshot = await get(ref(database, `rooms/${this.roomCode}`));
+            const roomSnapshot = await database.ref(`rooms/${this.roomCode}`).once('value');
             if (!roomSnapshot.exists()) {
                 throw new Error('Room not found');
             }
@@ -67,7 +66,8 @@ class GameState {
             this.gameMode = roomData.mode;
 
             // Add student to room
-            const studentId = push(ref(database, `rooms/${this.roomCode}/students`)).key;
+            const studentRef = database.ref(`rooms/${this.roomCode}/students`).push();
+            const studentId = studentRef.key;
             const studentData = {
                 id: studentId,
                 name: studentName,
@@ -79,7 +79,7 @@ class GameState {
                 joinedAt: Date.now()
             };
 
-            await set(ref(database, `rooms/${this.roomCode}/students/${studentId}`), studentData);
+            await studentRef.set(studentData);
             this.studentId = studentId;
 
             return roomData;
@@ -117,7 +117,7 @@ class GameState {
         if (!this.studentId || !this.roomCode) return;
 
         try {
-            await update(ref(database, `rooms/${this.roomCode}/students/${this.studentId}`), {
+            await database.ref(`rooms/${this.roomCode}/students/${this.studentId}`).update({
                 progress,
                 score,
                 lives,
@@ -133,7 +133,7 @@ class GameState {
         if (!this.roomCode) return;
 
         try {
-            await update(ref(database, `rooms/${this.roomCode}`), {
+            await database.ref(`rooms/${this.roomCode}`).update({
                 status,
                 statusChangedAt: Date.now()
             });
@@ -146,22 +146,22 @@ class GameState {
     listenToRoom(callback) {
         if (!this.roomCode) return;
 
-        const roomRef = ref(database, `rooms/${this.roomCode}`);
-        const listener = onValue(roomRef, (snapshot) => {
+        const roomRef = database.ref(`rooms/${this.roomCode}`);
+        roomRef.on('value', (snapshot) => {
             if (snapshot.exists()) {
                 callback(snapshot.val());
             }
         });
 
-        this.listeners.room = listener;
+        this.listeners.room = roomRef;
     }
 
     // Listen to students (teacher only)
     listenToStudents(callback) {
         if (!this.roomCode) return;
 
-        const studentsRef = ref(database, `rooms/${this.roomCode}/students`);
-        const listener = onValue(studentsRef, (snapshot) => {
+        const studentsRef = database.ref(`rooms/${this.roomCode}/students`);
+        studentsRef.on('value', (snapshot) => {
             const students = [];
             snapshot.forEach((child) => {
                 students.push({ id: child.key, ...child.val() });
@@ -169,7 +169,7 @@ class GameState {
             callback(students);
         });
 
-        this.listeners.students = listener;
+        this.listeners.students = studentsRef;
     }
 
     // Broadcast hint (teacher)
@@ -177,7 +177,7 @@ class GameState {
         if (!this.roomCode) return;
 
         try {
-            await update(ref(database, `rooms/${this.roomCode}`), {
+            await database.ref(`rooms/${this.roomCode}`).update({
                 broadcastHint: {
                     text: hintText,
                     timestamp: Date.now()
@@ -193,10 +193,10 @@ class GameState {
         if (!this.roomCode) return;
 
         try {
-            const roomSnapshot = await get(ref(database, `rooms/${this.roomCode}`));
+            const roomSnapshot = await database.ref(`rooms/${this.roomCode}`).once('value');
             const currentDuration = roomSnapshot.val().duration;
 
-            await update(ref(database, `rooms/${this.roomCode}`), {
+            await database.ref(`rooms/${this.roomCode}`).update({
                 duration: currentDuration + additionalSeconds
             });
         } catch (error) {
@@ -220,11 +220,12 @@ class GameState {
 
     // Clean up listeners
     cleanup() {
-        Object.values(this.listeners).forEach(unsubscribe => {
-            if (typeof unsubscribe === 'function') {
-                unsubscribe();
-            }
-        });
+        if (this.listeners.room) {
+            this.listeners.room.off();
+        }
+        if (this.listeners.students) {
+            this.listeners.students.off();
+        }
         this.listeners = {};
     }
 
@@ -232,7 +233,7 @@ class GameState {
     async leaveRoom() {
         if (this.playerRole === 'student' && this.studentId && this.roomCode) {
             try {
-                await remove(ref(database, `rooms/${this.roomCode}/students/${this.studentId}`));
+                await database.ref(`rooms/${this.roomCode}/students/${this.studentId}`).remove();
             } catch (error) {
                 console.error('Error leaving room:', error);
             }
@@ -241,6 +242,5 @@ class GameState {
     }
 }
 
-// Export singleton instance
+// Create singleton instance
 const gameState = new GameState();
-export default gameState;

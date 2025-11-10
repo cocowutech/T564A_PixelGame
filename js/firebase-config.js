@@ -1,23 +1,16 @@
 // Firebase Configuration
-// Replace these with your actual Firebase config values
+// Using Firebase Compat SDK (loaded from CDN in index.html)
 
-import { initializeApp } from 'firebase/app';
-import { getDatabase } from 'firebase/database';
-
-// TODO: Replace with your Firebase project configuration
-// Get these values from Firebase Console > Project Settings
 const firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-    databaseURL: "https://YOUR_PROJECT_ID.firebaseio.com",
-    projectId: "YOUR_PROJECT_ID",
-    storageBucket: "YOUR_PROJECT_ID.appspot.com",
-    messagingSenderId: "YOUR_SENDER_ID",
-    appId: "YOUR_APP_ID"
+  apiKey: "AIzaSyAGvSIRYI_BDBcXPH1Vr9m8FxD63UMhm3g",
+  authDomain: "pixel-relay-game.firebaseapp.com",
+  databaseURL: "https://pixel-relay-game-default-rtdb.firebaseio.com",
+  projectId: "pixel-relay-game",
+  storageBucket: "pixel-relay-game.firebasestorage.app",
+  messagingSenderId: "334467411448",
+  appId: "1:334467411448:web:02e9368c76581419a77a0d"
 };
 
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const database = getDatabase(app);
-
-export { app, database };
+firebase.initializeApp(firebaseConfig);
+const database = firebase.database();

@@ -208,5 +208,3 @@ class RunnerAnimation {
         return { x: this.runner.x, y: this.runner.y };
     }
 }
-
-export default RunnerAnimation;

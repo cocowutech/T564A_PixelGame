@@ -1,6 +1,5 @@
 // Main Application Entry Point
-import studentController from './student-controller.js';
-import teacherController from './teacher-controller.js';
+// Uses global studentController and teacherController objects
 
 class App {
     constructor() {

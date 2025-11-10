@@ -345,5 +345,3 @@ class DragConnect {
         return this.currentPath.map(node => node.dataset.value);
     }
 }
-
-export default DragConnect;
