@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="styles/main.css">
     <link rel="stylesheet" href="styles/student.css">
     <link rel="stylesheet" href="styles/teacher.css">
+    <link rel="stylesheet" href="styles/tutorial.css">
 </head>
 <body>
     <div id="app">
@@ -18,6 +19,185 @@
                 <div class="menu-options">
                     <button id="btn-student" class="menu-btn">Student Mode</button>
                     <button id="btn-teacher" class="menu-btn">Teacher Control Room</button>
+                    <button id="btn-how-to-play" class="menu-btn" style="border-color: var(--color-accent); color: var(--color-accent);">How to Play</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- How to Play Tutorial -->
+        <div id="how-to-play" class="screen">
+            <div class="tutorial-container">
+                <h2 style="color: var(--color-primary); text-align: center; margin-bottom: 30px;">How to Play Pixel Relay</h2>
+
+                <div class="tutorial-content">
+                    <!-- Game Overview -->
+                    <div class="tutorial-section">
+                        <h3>🎮 Game Overview</h3>
+                        <p>Pixel Relay is a fast-paced English learning game where you drag an 8-bit pixel runner to connect letters→words→sentences. Play solo to practice or join a classroom game to compete with your team!</p>
+                    </div>
+
+                    <!-- Game Modes -->
+                    <div class="tutorial-section">
+                        <h3>🎯 Game Modes</h3>
+                        <div class="mode-card">
+                            <h4>📝 Alphabet → Word (Spelling)</h4>
+                            <p><strong>Goal:</strong> Connect letters in the correct order to spell target words.</p>
+                            <p><strong>How:</strong> Drag from letter to letter to build the word shown at the top.</p>
+                            <p><strong>Example:</strong> To spell "LEARNING" → drag L → E → A → R → N → I → N → G</p>
+                        </div>
+
+                        <div class="mode-card">
+                            <h4>📖 Word → Sentence (Grammar)</h4>
+                            <p><strong>Goal:</strong> Connect words in the correct order to build sentences.</p>
+                            <p><strong>How:</strong> Drag from word to word to construct the target sentence.</p>
+                            <p><strong>Example:</strong> "The cat sat on the mat" → drag each word in order</p>
+                        </div>
+
+                        <div class="mode-card">
+                            <h4>🔄 Mixed Relay</h4>
+                            <p><strong>Goal:</strong> Complete both spelling AND sentence challenges!</p>
+                            <p><strong>How:</strong> First spell words, then build sentences.</p>
+                        </div>
+                    </div>
+
+                    <!-- How to Play -->
+                    <div class="tutorial-section">
+                        <h3>🕹️ Controls & Gameplay</h3>
+                        <div class="controls-grid">
+                            <div class="control-item">
+                                <div class="control-icon">🖱️</div>
+                                <div class="control-desc">
+                                    <strong>Drag to Connect</strong>
+                                    <p>Click and hold on a letter/word, drag to the next one, release to connect</p>
+                                </div>
+                            </div>
+
+                            <div class="control-item">
+                                <div class="control-icon">↩️</div>
+                                <div class="control-desc">
+                                    <strong>Undo Button</strong>
+                                    <p>Made a mistake? Click Undo or press Ctrl/Cmd+Z to go back one step</p>
+                                </div>
+                            </div>
+
+                            <div class="control-item">
+                                <div class="control-icon">💡</div>
+                                <div class="control-desc">
+                                    <strong>Hint Button</strong>
+                                    <p>Stuck? Click Hint or press Ctrl/Cmd+H (costs 10 points, limited in Hard mode)</p>
+                                </div>
+                            </div>
+
+                            <div class="control-item">
+                                <div class="control-icon">⌨️</div>
+                                <div class="control-desc">
+                                    <strong>Keyboard Shortcuts</strong>
+                                    <p>Ctrl+Shift+C = High Contrast, Tab = Navigate, Esc = Close</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Scoring System -->
+                    <div class="tutorial-section">
+                        <h3>🏆 Lives & Scoring</h3>
+                        <div class="scoring-grid">
+                            <div class="score-item correct">
+                                <h4>✅ Correct Connection</h4>
+                                <p>• Runner dashes forward</p>
+                                <p>• +100 points × chain length</p>
+                                <p>• +1 Life (max 5)</p>
+                                <p>• Progress increases</p>
+                            </div>
+
+                            <div class="score-item incorrect">
+                                <h4>❌ Incorrect Connection</h4>
+                                <p>• Runner stumbles</p>
+                                <p>• -1 Life</p>
+                                <p>• Try again!</p>
+                            </div>
+
+                            <div class="score-item lives">
+                                <h4>❤️ Lives System</h4>
+                                <p>• Start with 3 lives</p>
+                                <p>• Earn lives by being correct</p>
+                                <p>• Max 5 lives</p>
+                                <p>• 0 lives = 3 second cooldown, resume with 1 life</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Visual Guide -->
+                    <div class="tutorial-section">
+                        <h3>👁️ Visual Feedback</h3>
+                        <div class="visual-guide">
+                            <div class="visual-item">
+                                <div class="runner-demo">🏃</div>
+                                <p><strong>Pixel Runner</strong><br>Your character that moves as you connect</p>
+                            </div>
+                            <div class="visual-item">
+                                <div class="visual-color" style="background: var(--color-success);">✓</div>
+                                <p><strong>Green</strong><br>Correct connections</p>
+                            </div>
+                            <div class="visual-item">
+                                <div class="visual-color" style="background: var(--color-error);">✗</div>
+                                <p><strong>Red</strong><br>Incorrect connections</p>
+                            </div>
+                            <div class="visual-item">
+                                <div class="visual-color" style="background: var(--color-accent);">?</div>
+                                <p><strong>Yellow</strong><br>Target/Selected items</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Tips -->
+                    <div class="tutorial-section">
+                        <h3>💪 Pro Tips</h3>
+                        <ul class="tips-list">
+                            <li>✨ <strong>Read the target:</strong> Always check what word/sentence you need to build at the top of the screen</li>
+                            <li>⚡ <strong>Speed matters:</strong> Complete challenges quickly for bonus points</li>
+                            <li>🎯 <strong>Accuracy first:</strong> Take your time to avoid losing lives</li>
+                            <li>💡 <strong>Use hints wisely:</strong> They cost points, so try without hints first</li>
+                            <li>🔄 <strong>Practice mode:</strong> Try Solo Practice to learn without pressure</li>
+                            <li>👥 <strong>Team play:</strong> In multiplayer, your progress helps the whole team</li>
+                            <li>⏱️ <strong>Watch the timer:</strong> Plan your moves before time runs out</li>
+                        </ul>
+                    </div>
+
+                    <!-- Getting Started -->
+                    <div class="tutorial-section">
+                        <h3>🚀 Getting Started</h3>
+                        <div class="getting-started">
+                            <div class="start-option">
+                                <h4>🎓 Solo Practice Mode</h4>
+                                <ol>
+                                    <li>Click "Student Mode"</li>
+                                    <li>Enter your name</li>
+                                    <li>Click "Solo Practice Mode"</li>
+                                    <li>Choose difficulty, topic, and goal</li>
+                                    <li>Start playing immediately!</li>
+                                </ol>
+                                <p class="note">Perfect for learning and practicing at your own pace</p>
+                            </div>
+
+                            <div class="start-option">
+                                <h4>👥 Multiplayer Mode</h4>
+                                <ol>
+                                    <li>Teacher creates a room and shares the code</li>
+                                    <li>Click "Student Mode"</li>
+                                    <li>Enter your name and room code</li>
+                                    <li>Wait for teacher to start</li>
+                                    <li>Compete with your classmates!</li>
+                                </ol>
+                                <p class="note">Work together as a team to achieve Team Complete</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tutorial-footer">
+                    <button id="btn-back-tutorial" class="action-btn">Back to Menu</button>
+                    <button id="btn-try-tutorial" class="action-btn" style="border-color: var(--color-success); color: var(--color-success);">Try Solo Practice Now!</button>
                 </div>
             </div>
         </div>

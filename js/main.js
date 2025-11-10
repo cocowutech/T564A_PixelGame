@@ -16,8 +16,11 @@ class App {
     setupLandingPage() {
         const studentBtn = document.getElementById('btn-student');
         const teacherBtn = document.getElementById('btn-teacher');
+        const howToPlayBtn = document.getElementById('btn-how-to-play');
         const backStudentBtn = document.getElementById('btn-back-student');
         const backTeacherBtn = document.getElementById('btn-back-teacher');
+        const backTutorialBtn = document.getElementById('btn-back-tutorial');
+        const tryTutorialBtn = document.getElementById('btn-try-tutorial');
 
         // Student mode
         studentBtn.addEventListener('click', () => {
@@ -31,6 +34,11 @@ class App {
             teacherController.init();
         });
 
+        // How to Play
+        howToPlayBtn.addEventListener('click', () => {
+            this.showScreen('how-to-play');
+        });
+
         // Back buttons
         backStudentBtn.addEventListener('click', () => {
             this.showScreen('landing-page');
@@ -38,6 +46,20 @@ class App {
 
         backTeacherBtn.addEventListener('click', () => {
             this.showScreen('landing-page');
+        });
+
+        backTutorialBtn.addEventListener('click', () => {
+            this.showScreen('landing-page');
+        });
+
+        // Try Solo Practice from tutorial
+        tryTutorialBtn.addEventListener('click', () => {
+            this.showScreen('student-join');
+            studentController.init();
+            // Auto-focus the name input
+            setTimeout(() => {
+                document.getElementById('student-name').focus();
+            }, 100);
         });
     }
 
