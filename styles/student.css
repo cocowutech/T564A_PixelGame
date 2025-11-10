@@ -1,0 +1,418 @@
+/* Student Game Board Styles */
+
+#student-board {
+    flex-direction: column;
+    padding: var(--spacing-lg);
+    justify-content: flex-start;
+}
+
+/* Game Header */
+.game-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: var(--spacing-md);
+    background-color: var(--color-bg-secondary);
+    border: 2px solid var(--color-primary);
+    margin-bottom: var(--spacing-md);
+}
+
+.lives-display,
+.timer-display,
+.score-display {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.lives-label,
+.score-label {
+    color: var(--color-text-dim);
+    font-size: var(--font-size-md);
+}
+
+.hearts-container {
+    display: flex;
+    gap: var(--spacing-xs);
+}
+
+.heart {
+    width: 24px;
+    height: 24px;
+    color: var(--color-error);
+    font-size: 20px;
+}
+
+.heart.empty {
+    opacity: 0.3;
+}
+
+#time-remaining {
+    font-size: var(--font-size-lg);
+    color: var(--color-accent);
+    font-weight: bold;
+}
+
+#time-remaining.warning {
+    color: var(--color-error);
+    animation: pulse 1s infinite;
+}
+
+#current-score {
+    font-size: var(--font-size-lg);
+    color: var(--color-success);
+    font-weight: bold;
+}
+
+/* Team Track */
+.team-track {
+    width: 100%;
+    background-color: var(--color-bg-secondary);
+    border: 2px solid var(--color-primary);
+    padding: var(--spacing-md);
+    margin-bottom: var(--spacing-md);
+}
+
+.track-label {
+    color: var(--color-text-dim);
+    font-size: var(--font-size-sm);
+    margin-bottom: var(--spacing-sm);
+}
+
+.progress-track {
+    position: relative;
+    height: 40px;
+    background-color: var(--color-bg);
+    border: 1px solid var(--color-primary);
+    overflow: hidden;
+}
+
+.team-runner {
+    position: absolute;
+    bottom: 5px;
+    width: 30px;
+    height: 30px;
+    font-size: 24px;
+    transition: left 0.5s ease;
+}
+
+.team-runner::before {
+    content: '🏃';
+}
+
+.team-runner-label {
+    position: absolute;
+    top: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: var(--font-size-sm);
+    color: var(--color-text);
+    white-space: nowrap;
+}
+
+/* Game Board */
+.board-container {
+    position: relative;
+    flex: 1;
+    width: 100%;
+    background-color: var(--color-bg-secondary);
+    border: 2px solid var(--color-primary);
+    overflow: hidden;
+    margin-bottom: var(--spacing-md);
+}
+
+.runner-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 10;
+}
+
+.connection-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 5;
+}
+
+.connection-line {
+    position: absolute;
+    height: 3px;
+    background-color: var(--color-primary);
+    transform-origin: left center;
+    transition: all 0.2s ease;
+}
+
+.connection-line.correct {
+    background-color: var(--color-success);
+    box-shadow: 0 0 10px var(--color-success);
+}
+
+.connection-line.incorrect {
+    background-color: var(--color-error);
+    box-shadow: 0 0 10px var(--color-error);
+}
+
+/* Nodes Container */
+.nodes-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    padding: var(--spacing-lg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.lane {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-lg);
+    padding: var(--spacing-md);
+    position: relative;
+    transition: transform 0.5s ease;
+}
+
+.lane.scrolling {
+    animation: scrollLane 10s linear infinite;
+}
+
+/* Node Styles */
+.node {
+    position: relative;
+    min-width: 60px;
+    min-height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--color-bg);
+    border: 2px solid var(--color-primary);
+    color: var(--color-text);
+    font-size: var(--font-size-lg);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    user-select: none;
+}
+
+.node:hover {
+    background-color: var(--color-primary);
+    color: var(--color-bg);
+    transform: scale(1.1);
+    box-shadow: 0 0 15px var(--color-primary);
+}
+
+.node.selected {
+    background-color: var(--color-accent);
+    border-color: var(--color-accent);
+    color: var(--color-bg);
+    box-shadow: 0 0 20px var(--color-accent);
+}
+
+.node.correct {
+    background-color: var(--color-success);
+    border-color: var(--color-success);
+    color: var(--color-bg);
+    animation: correctPulse 0.5s ease;
+}
+
+.node.incorrect {
+    background-color: var(--color-error);
+    border-color: var(--color-error);
+    color: var(--color-bg);
+    animation: shake 0.3s ease;
+}
+
+.node.disabled {
+    opacity: 0.3;
+    pointer-events: none;
+}
+
+/* Word nodes (larger) */
+.node.word {
+    min-width: 100px;
+    padding: var(--spacing-sm) var(--spacing-md);
+}
+
+/* Ghost outline for target word */
+.ghost-outline {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: 2px dashed var(--color-accent);
+    background-color: transparent;
+    padding: var(--spacing-md);
+    min-width: 150px;
+    text-align: center;
+    opacity: 0.5;
+}
+
+.ghost-outline::before {
+    content: attr(data-length);
+    color: var(--color-accent);
+    font-size: var(--font-size-sm);
+}
+
+/* Sentence slot frames */
+.sentence-frame {
+    display: flex;
+    gap: var(--spacing-md);
+    flex-wrap: wrap;
+    padding: var(--spacing-lg);
+}
+
+.slot {
+    min-width: 120px;
+    min-height: 60px;
+    border: 2px dashed var(--color-primary);
+    background-color: var(--color-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.slot-label {
+    position: absolute;
+    top: -20px;
+    left: 0;
+    font-size: var(--font-size-sm);
+    color: var(--color-text-dim);
+}
+
+.slot.filled {
+    border-style: solid;
+    background-color: var(--color-primary);
+    color: var(--color-bg);
+}
+
+.slot.correct {
+    background-color: var(--color-success);
+    border-color: var(--color-success);
+}
+
+/* Mini-map */
+.mini-map {
+    width: 100%;
+    height: 60px;
+    background-color: var(--color-bg-secondary);
+    border: 2px solid var(--color-primary);
+    padding: var(--spacing-sm);
+    position: relative;
+}
+
+.mini-map.hidden {
+    display: none;
+}
+
+.mini-map-viewport {
+    position: absolute;
+    height: 100%;
+    background-color: rgba(0, 255, 159, 0.3);
+    border: 1px solid var(--color-primary);
+}
+
+.mini-map-node {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background-color: var(--color-primary);
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+/* Game Controls */
+.game-controls {
+    width: 100%;
+    display: flex;
+    gap: var(--spacing-md);
+    align-items: center;
+    background-color: var(--color-bg-secondary);
+    border: 2px solid var(--color-primary);
+    padding: var(--spacing-md);
+}
+
+.control-btn {
+    min-width: 100px;
+}
+
+.target-display {
+    flex: 1;
+    text-align: center;
+    color: var(--color-accent);
+    font-size: var(--font-size-md);
+}
+
+/* Feedback Messages */
+.feedback-message {
+    font-size: var(--font-size-lg);
+}
+
+.feedback-message.success {
+    color: var(--color-success);
+}
+
+.feedback-message.error {
+    color: var(--color-error);
+}
+
+/* Animations */
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
+
+@keyframes correctPulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.2);
+        box-shadow: 0 0 30px var(--color-success);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+@keyframes scrollLane {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .node {
+        min-width: 50px;
+        min-height: 50px;
+        font-size: var(--font-size-md);
+    }
+
+    .node.word {
+        min-width: 80px;
+    }
+
+    .game-controls {
+        flex-wrap: wrap;
+    }
+
+    .control-btn {
+        flex: 1;
+        min-width: 80px;
+    }
+}

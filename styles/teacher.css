@@ -1,0 +1,349 @@
+/* Teacher Control Room Styles */
+
+#teacher-control {
+    flex-direction: column;
+    padding: var(--spacing-lg);
+    justify-content: flex-start;
+}
+
+/* Control Header */
+.control-header {
+    width: 100%;
+    background-color: var(--color-bg-secondary);
+    border: 2px solid var(--color-accent);
+    padding: var(--spacing-md);
+    margin-bottom: var(--spacing-md);
+}
+
+.control-header h2 {
+    color: var(--color-accent);
+    margin-bottom: var(--spacing-md);
+}
+
+.room-info {
+    display: flex;
+    gap: var(--spacing-xl);
+    flex-wrap: wrap;
+}
+
+.room-info span {
+    color: var(--color-text-dim);
+    font-size: var(--font-size-md);
+}
+
+.room-info strong {
+    color: var(--color-primary);
+}
+
+/* Control Actions */
+.control-actions {
+    width: 100%;
+    display: flex;
+    gap: var(--spacing-md);
+    flex-wrap: wrap;
+    margin-bottom: var(--spacing-lg);
+}
+
+.control-actions .action-btn {
+    flex: 1;
+    min-width: 150px;
+}
+
+/* Students Grid */
+.students-grid {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.student-card {
+    background-color: var(--color-bg-secondary);
+    border: 2px solid var(--color-primary);
+    padding: var(--spacing-md);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    transition: all 0.3s ease;
+}
+
+.student-card:hover {
+    box-shadow: 0 0 15px var(--color-primary);
+    transform: translateY(-2px);
+}
+
+.student-card.completed {
+    border-color: var(--color-success);
+    background-color: rgba(0, 255, 159, 0.1);
+}
+
+.student-card.struggling {
+    border-color: var(--color-error);
+    background-color: rgba(255, 0, 110, 0.1);
+}
+
+.student-name {
+    font-size: var(--font-size-lg);
+    color: var(--color-primary);
+    font-weight: bold;
+}
+
+.student-status {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: var(--spacing-sm);
+}
+
+.status-label {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-dim);
+}
+
+.status-value {
+    font-size: var(--font-size-md);
+    color: var(--color-text);
+}
+
+.student-lives {
+    display: flex;
+    gap: var(--spacing-xs);
+}
+
+.student-progress {
+    width: 100%;
+    height: 8px;
+    background-color: var(--color-bg);
+    border: 1px solid var(--color-primary);
+    position: relative;
+    margin-top: var(--spacing-sm);
+}
+
+.progress-fill {
+    height: 100%;
+    background-color: var(--color-primary);
+    transition: width 0.5s ease;
+}
+
+.student-card.completed .progress-fill {
+    background-color: var(--color-success);
+}
+
+.student-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-sm);
+    margin-top: var(--spacing-sm);
+    padding-top: var(--spacing-sm);
+    border-top: 1px solid var(--color-primary);
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.stat-label {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-dim);
+}
+
+.stat-value {
+    font-size: var(--font-size-md);
+    color: var(--color-primary);
+    font-weight: bold;
+}
+
+/* Analytics Section */
+.analytics-section {
+    width: 100%;
+    background-color: var(--color-bg-secondary);
+    border: 2px solid var(--color-primary);
+    padding: var(--spacing-lg);
+}
+
+.analytics-section h3 {
+    color: var(--color-primary);
+    margin-bottom: var(--spacing-md);
+}
+
+.analytics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--spacing-md);
+}
+
+.analytics-card {
+    background-color: var(--color-bg);
+    border: 1px solid var(--color-primary);
+    padding: var(--spacing-md);
+}
+
+.analytics-title {
+    font-size: var(--font-size-md);
+    color: var(--color-accent);
+    margin-bottom: var(--spacing-sm);
+}
+
+.analytics-value {
+    font-size: var(--font-size-xl);
+    color: var(--color-primary);
+    font-weight: bold;
+}
+
+.analytics-chart {
+    width: 100%;
+    height: 150px;
+    background-color: var(--color-bg);
+    border: 1px solid var(--color-primary);
+    margin-top: var(--spacing-sm);
+    position: relative;
+}
+
+/* Common Errors Display */
+.common-errors {
+    margin-top: var(--spacing-md);
+}
+
+.error-item {
+    display: flex;
+    justify-content: space-between;
+    padding: var(--spacing-sm);
+    background-color: var(--color-bg);
+    border-left: 3px solid var(--color-error);
+    margin-bottom: var(--spacing-sm);
+}
+
+.error-text {
+    color: var(--color-text);
+}
+
+.error-count {
+    color: var(--color-error);
+    font-weight: bold;
+}
+
+/* Histogram */
+.histogram {
+    display: flex;
+    align-items: flex-end;
+    gap: var(--spacing-xs);
+    height: 100px;
+    padding: var(--spacing-sm);
+}
+
+.histogram-bar {
+    flex: 1;
+    background-color: var(--color-primary);
+    min-height: 5px;
+    position: relative;
+    transition: height 0.3s ease;
+}
+
+.histogram-bar:hover {
+    background-color: var(--color-accent);
+}
+
+.histogram-label {
+    position: absolute;
+    bottom: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: var(--font-size-sm);
+    color: var(--color-text-dim);
+    white-space: nowrap;
+}
+
+/* Confusion Heatmap */
+.heatmap {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(30px, 1fr));
+    gap: 2px;
+    padding: var(--spacing-sm);
+}
+
+.heatmap-cell {
+    aspect-ratio: 1;
+    background-color: var(--color-bg);
+    border: 1px solid var(--color-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--font-size-sm);
+    position: relative;
+    cursor: pointer;
+}
+
+.heatmap-cell:hover::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: var(--color-bg-secondary);
+    border: 1px solid var(--color-primary);
+    padding: var(--spacing-xs);
+    white-space: nowrap;
+    z-index: 100;
+}
+
+.heatmap-cell.intensity-1 { background-color: rgba(255, 0, 110, 0.2); }
+.heatmap-cell.intensity-2 { background-color: rgba(255, 0, 110, 0.4); }
+.heatmap-cell.intensity-3 { background-color: rgba(255, 0, 110, 0.6); }
+.heatmap-cell.intensity-4 { background-color: rgba(255, 0, 110, 0.8); }
+.heatmap-cell.intensity-5 { background-color: rgba(255, 0, 110, 1); }
+
+/* Scrollbar Styling */
+.students-grid::-webkit-scrollbar {
+    width: 8px;
+}
+
+.students-grid::-webkit-scrollbar-track {
+    background: var(--color-bg);
+}
+
+.students-grid::-webkit-scrollbar-thumb {
+    background: var(--color-primary);
+    border-radius: 4px;
+}
+
+.students-grid::-webkit-scrollbar-thumb:hover {
+    background: var(--color-accent);
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .students-grid {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    }
+
+    .control-actions .action-btn {
+        min-width: 120px;
+    }
+}
+
+@media (max-width: 768px) {
+    .room-info {
+        flex-direction: column;
+        gap: var(--spacing-sm);
+    }
+
+    .control-actions {
+        flex-direction: column;
+    }
+
+    .control-actions .action-btn {
+        width: 100%;
+    }
+
+    .students-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .analytics-grid {
+        grid-template-columns: 1fr;
+    }
+}

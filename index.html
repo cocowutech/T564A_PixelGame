@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pixel Relay: Connect & Compose</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/student.css">
+    <link rel="stylesheet" href="styles/teacher.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Landing Page -->
+        <div id="landing-page" class="screen active">
+            <div class="title-screen">
+                <h1 class="pixel-title">Pixel Relay</h1>
+                <p class="subtitle">Connect & Compose</p>
+                <div class="menu-options">
+                    <button id="btn-student" class="menu-btn">Student Mode</button>
+                    <button id="btn-teacher" class="menu-btn">Teacher Control Room</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Student Join Screen -->
+        <div id="student-join" class="screen">
+            <div class="join-container">
+                <h2>Join Game</h2>
+                <input type="text" id="student-name" placeholder="Enter your name" class="input-field">
+                <input type="text" id="room-code" placeholder="Room Code" class="input-field">
+                <button id="btn-join" class="action-btn">Join</button>
+                <button id="btn-back-student" class="back-btn">Back</button>
+            </div>
+        </div>
+
+        <!-- Student Game Board -->
+        <div id="student-board" class="screen">
+            <div class="game-header">
+                <div class="lives-display">
+                    <span class="lives-label">Lives:</span>
+                    <div id="lives-hearts" class="hearts-container"></div>
+                </div>
+                <div class="timer-display">
+                    <span id="time-remaining">3:00</span>
+                </div>
+                <div class="score-display">
+                    <span class="score-label">Score:</span>
+                    <span id="current-score">0</span>
+                </div>
+            </div>
+
+            <!-- Team Progress Bar -->
+            <div class="team-track">
+                <div class="track-label">Team Progress</div>
+                <div id="team-progress-bar" class="progress-track"></div>
+            </div>
+
+            <!-- Game Board -->
+            <div id="game-board" class="board-container">
+                <canvas id="runner-canvas" class="runner-layer"></canvas>
+                <div id="connection-layer" class="connection-layer"></div>
+                <div id="nodes-container" class="nodes-container"></div>
+            </div>
+
+            <!-- Mini-map for long sentences -->
+            <div id="mini-map" class="mini-map hidden"></div>
+
+            <!-- Controls -->
+            <div class="game-controls">
+                <button id="btn-undo" class="control-btn">Undo</button>
+                <button id="btn-hint" class="control-btn">Hint</button>
+                <div class="target-display">
+                    <span id="target-text">Target: </span>
+                </div>
+            </div>
+
+            <!-- Feedback Modal -->
+            <div id="feedback-modal" class="modal hidden">
+                <div class="modal-content">
+                    <p id="feedback-message"></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Teacher Login/Setup -->
+        <div id="teacher-setup" class="screen">
+            <div class="setup-container">
+                <h2>Teacher Control Room</h2>
+                <div class="setup-section">
+                    <h3>Create New Game</h3>
+                    <input type="text" id="teacher-name" placeholder="Your Name" class="input-field">
+
+                    <label for="game-mode">Game Mode:</label>
+                    <select id="game-mode" class="select-field">
+                        <option value="alphabet-word">Alphabet → Word</option>
+                        <option value="word-sentence">Word → Sentence</option>
+                        <option value="mixed-relay">Mixed Relay</option>
+                    </select>
+
+                    <label for="source-text">Source Text:</label>
+                    <textarea id="source-text" placeholder="Paste article or text here..." class="textarea-field"></textarea>
+
+                    <label for="ready-prompt">Or use a ready prompt:</label>
+                    <select id="ready-prompt" class="select-field">
+                        <option value="">-- Select a prompt --</option>
+                        <option value="extract-vocab">Extract 8 key academic words and 3 collocations at B1 level</option>
+                        <option value="focus-sentences">Create 2 focus sentences using today's vocabulary in active voice</option>
+                        <option value="complex-sentence">Generate 1 complex sentence with a relative clause and 1 with a time adverbial</option>
+                    </select>
+
+                    <div class="time-settings">
+                        <label for="game-duration">Game Duration (minutes):</label>
+                        <input type="number" id="game-duration" value="3" min="1" max="10" class="input-field small">
+                    </div>
+
+                    <button id="btn-create-room" class="action-btn">Create Room</button>
+                    <button id="btn-back-teacher" class="back-btn">Back</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Teacher Control Room -->
+        <div id="teacher-control" class="screen">
+            <div class="control-header">
+                <h2>Control Room</h2>
+                <div class="room-info">
+                    <span>Room Code: <strong id="display-room-code"></strong></span>
+                    <span>Mode: <strong id="display-mode"></strong></span>
+                    <span>Time: <strong id="control-timer"></strong></span>
+                </div>
+            </div>
+
+            <div class="control-actions">
+                <button id="btn-start-game" class="action-btn">Start Game</button>
+                <button id="btn-pause-game" class="action-btn">Pause</button>
+                <button id="btn-broadcast-hint" class="action-btn">Broadcast Hint</button>
+                <button id="btn-extend-time" class="action-btn">+30s</button>
+                <button id="btn-end-game" class="action-btn danger">End Game</button>
+            </div>
+
+            <div class="students-grid" id="students-grid">
+                <!-- Student cards will be dynamically added -->
+            </div>
+
+            <div class="analytics-section">
+                <h3>Live Analytics</h3>
+                <div id="analytics-display" class="analytics-grid">
+                    <!-- Analytics data -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Screen -->
+        <div id="results-screen" class="screen">
+            <div class="results-container">
+                <h2>Game Complete!</h2>
+                <div id="team-results" class="team-results"></div>
+                <div id="individual-results" class="individual-results"></div>
+                <button id="btn-new-game" class="action-btn">New Game</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script type="module" src="js/firebase-config.js"></script>
+    <script type="module" src="js/game-state.js"></script>
+    <script type="module" src="js/student-controller.js"></script>
+    <script type="module" src="js/teacher-controller.js"></script>
+    <script type="module" src="js/drag-connect.js"></script>
+    <script type="module" src="js/runner-animation.js"></script>
+    <script type="module" src="js/main.js"></script>
+</body>
+</html>
