@@ -16,13 +16,16 @@ class StudentController {
 
     init() {
         this.setupJoinScreen();
+        this.setupSoloMode();
     }
 
     setupJoinScreen() {
         const joinBtn = document.getElementById('btn-join');
+        const soloBtn = document.getElementById('btn-solo-play');
         const studentNameInput = document.getElementById('student-name');
         const roomCodeInput = document.getElementById('room-code');
 
+        // Multiplayer join
         joinBtn.addEventListener('click', async () => {
             const name = studentNameInput.value.trim();
             const code = roomCodeInput.value.trim();
@@ -51,6 +54,132 @@ class StudentController {
                 joinBtn.textContent = 'Join';
             }
         });
+
+        // Solo mode
+        soloBtn.addEventListener('click', () => {
+            const name = studentNameInput.value.trim();
+            if (!name) {
+                this.showFeedback('Please enter your name', 'error');
+                return;
+            }
+
+            this.playerName = name;
+            this.showSoloSetup();
+        });
+    }
+
+    setupSoloMode() {
+        const startBtn = document.getElementById('btn-start-solo');
+        const backBtn = document.getElementById('btn-back-solo');
+        const topicSelect = document.getElementById('solo-topic');
+        const customTextArea = document.getElementById('solo-custom-text');
+
+        // Show/hide custom text area
+        topicSelect.addEventListener('change', () => {
+            if (topicSelect.value === 'custom') {
+                customTextArea.style.display = 'block';
+            } else {
+                customTextArea.style.display = 'none';
+            }
+        });
+
+        // Start solo game
+        startBtn.addEventListener('click', () => {
+            this.startSoloGame();
+        });
+
+        // Back button
+        backBtn.addEventListener('click', () => {
+            document.getElementById('solo-setup').classList.remove('active');
+            document.getElementById('student-join').classList.add('active');
+        });
+    }
+
+    showSoloSetup() {
+        document.getElementById('student-join').classList.remove('active');
+        document.getElementById('solo-setup').classList.add('active');
+    }
+
+    startSoloGame() {
+        const mode = document.getElementById('solo-mode').value;
+        const difficulty = document.getElementById('solo-difficulty').value;
+        const topic = document.getElementById('solo-topic').value;
+        const goal = document.getElementById('solo-goal').value;
+        const customText = document.getElementById('solo-custom-text').value.trim();
+
+        // Set difficulty parameters
+        const difficultySettings = {
+            easy: { duration: 300, hintsEnabled: true, maxHints: 999 },
+            medium: { duration: 180, hintsEnabled: true, maxHints: 5 },
+            hard: { duration: 120, hintsEnabled: false, maxHints: 0 }
+        };
+
+        const settings = difficultySettings[difficulty];
+        this.soloSettings = {
+            mode,
+            difficulty,
+            topic,
+            goal,
+            hintsEnabled: settings.hintsEnabled,
+            maxHints: settings.maxHints,
+            hintsUsed: 0
+        };
+
+        // Get source text based on topic
+        const sourceText = this.getSoloSourceText(topic, customText);
+
+        // Create local room data (no Firebase needed)
+        const roomData = {
+            mode: mode,
+            duration: settings.duration,
+            status: 'active',
+            targets: this.generateSoloTargets(mode, sourceText),
+            isSolo: true
+        };
+
+        this.currentMode = mode;
+        this.timeRemaining = settings.duration;
+
+        // Show game board
+        document.getElementById('solo-setup').classList.remove('active');
+        this.showStudentBoard();
+        this.setupGameBoard(roomData);
+
+        // Start timer immediately in solo mode
+        this.startTimer(settings.duration);
+
+        this.showFeedback('Solo game started! Good luck!', 'success');
+    }
+
+    getSoloSourceText(topic, customText) {
+        if (topic === 'custom' && customText) {
+            return customText;
+        }
+
+        const texts = {
+            general: "Learning wonderful process helps students develop skills through practice dedication. Knowledge grows stronger when challenge yourself daily. Success comes from persistent effort continuous improvement.",
+            academic: "Research demonstrates significant correlation between vocabulary acquisition academic achievement. Scholars investigate phenomena utilizing empirical methodologies rigorous analysis. Comprehension facilitates effective communication professional contexts.",
+            business: "Marketing strategy requires comprehensive analysis customer behavior market trends. Management focuses maximizing productivity efficiency organizational performance. Leadership involves strategic decision making effective communication.",
+            technology: "Software development requires systematic approach problem solving debugging. Programming languages enable developers create innovative applications solutions. Technology advances rapidly requiring continuous learning adaptation."
+        };
+
+        return texts[topic] || texts.general;
+    }
+
+    generateSoloTargets(mode, sourceText) {
+        const targets = { words: [], sentences: [] };
+
+        if (mode === 'alphabet-word' || mode === 'mixed-relay') {
+            const words = sourceText.match(/\b[a-zA-Z]{5,}\b/g) || [];
+            targets.words = [...new Set(words)].slice(0, 8).map(word => word.toLowerCase());
+        }
+
+        if (mode === 'word-sentence' || mode === 'mixed-relay') {
+            const sentences = sourceText.match(/[^.!?]+[.!?]/g) || [];
+            targets.sentences = sentences.slice(0, 3).map(s => s.trim());
+        }
+
+        return targets;
     }
 
     showStudentBoard() {
@@ -227,9 +356,26 @@ class StudentController {
     }
 
     useHint() {
+        // Check if hints are disabled in solo mode
+        if (this.soloSettings && !this.soloSettings.hintsEnabled) {
+            this.showFeedback('Hints are disabled in this difficulty!', 'error');
+            return;
+        }
+
+        // Check hint limit in solo mode
+        if (this.soloSettings && this.soloSettings.hintsUsed >= this.soloSettings.maxHints) {
+            this.showFeedback('No hints remaining!', 'error');
+            return;
+        }
+
         // Cost: -10 points
         this.score = Math.max(0, this.score - 10);
         this.updateScoreDisplay();
+
+        // Track hints used in solo mode
+        if (this.soloSettings) {
+            this.soloSettings.hintsUsed++;
+        }
 
         if (this.currentMode === 'alphabet-word') {
             // Show next letter
@@ -287,7 +433,10 @@ class StudentController {
     }
 
     updateProgress() {
-        gameState.updateStudentProgress(this.progress, this.score, this.lives);
+        // Skip Firebase updates in solo mode
+        if (!this.soloSettings) {
+            gameState.updateStudentProgress(this.progress, this.score, this.lives);
+        }
     }
 
     startTimer(duration) {
@@ -413,12 +562,40 @@ class StudentController {
 
         // Show individual results
         const resultsDiv = document.getElementById('individual-results');
-        resultsDiv.innerHTML = `
-            <h3>Your Results</h3>
-            <p>Score: ${this.score}</p>
-            <p>Progress: ${this.progress}%</p>
-            <p>Lives Remaining: ${this.lives}</p>
-        `;
+
+        let resultsHTML = `<h3>Your Results</h3>`;
+
+        if (this.soloSettings) {
+            // Solo mode results with more details
+            const goalMessages = {
+                score: this.score >= 500 ? 'High Score Achieved!' : 'Keep practicing for higher scores!',
+                time: this.progress >= 100 ? 'Speed Challenge Complete!' : 'Almost there!',
+                accuracy: this.soloSettings.hintsUsed === 0 && this.lives === 5 ? 'Perfect Accuracy!' : 'Try for no hints next time!',
+                practice: 'Great practice session!'
+            };
+
+            resultsHTML += `
+                <div style="margin: 20px 0; padding: 20px; background: var(--color-bg-secondary); border: 2px solid var(--color-primary);">
+                    <h4 style="color: var(--color-accent); margin-bottom: 15px;">Solo Mode - ${this.soloSettings.difficulty.toUpperCase()}</h4>
+                    <p style="color: var(--color-success); font-size: 18px; margin-bottom: 10px;">${goalMessages[this.soloSettings.goal]}</p>
+                    <p><strong>Score:</strong> ${this.score}</p>
+                    <p><strong>Progress:</strong> ${this.progress}%</p>
+                    <p><strong>Lives Remaining:</strong> ${this.lives}/5</p>
+                    <p><strong>Hints Used:</strong> ${this.soloSettings.hintsUsed}/${this.soloSettings.maxHints === 999 ? '∞' : this.soloSettings.maxHints}</p>
+                    <p><strong>Topic:</strong> ${this.soloSettings.topic.charAt(0).toUpperCase() + this.soloSettings.topic.slice(1)}</p>
+                </div>
+                <button onclick="location.reload()" class="action-btn" style="margin-top: 20px;">Play Again</button>
+            `;
+        } else {
+            // Multiplayer results
+            resultsHTML += `
+                <p>Score: ${this.score}</p>
+                <p>Progress: ${this.progress}%</p>
+                <p>Lives Remaining: ${this.lives}</p>
+            `;
+        }
+
+        resultsDiv.innerHTML = resultsHTML;
     }
 
     // Helper methods

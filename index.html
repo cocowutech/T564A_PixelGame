@@ -25,11 +25,65 @@
         <!-- Student Join Screen -->
         <div id="student-join" class="screen">
             <div class="join-container">
-                <h2>Join Game</h2>
+                <h2>Student Mode</h2>
                 <input type="text" id="student-name" placeholder="Enter your name" class="input-field">
+
+                <div class="mode-divider">
+                    <h3 style="color: var(--color-accent); font-size: 14px; margin: 20px 0 10px 0;">Join Multiplayer</h3>
+                </div>
                 <input type="text" id="room-code" placeholder="Room Code" class="input-field">
-                <button id="btn-join" class="action-btn">Join</button>
+                <button id="btn-join" class="action-btn">Join Room</button>
+
+                <div class="mode-divider">
+                    <h3 style="color: var(--color-accent); font-size: 14px; margin: 20px 0 10px 0;">Or Play Solo</h3>
+                </div>
+                <button id="btn-solo-play" class="action-btn" style="border-color: var(--color-secondary); color: var(--color-secondary);">Solo Practice Mode</button>
+
                 <button id="btn-back-student" class="back-btn">Back</button>
+            </div>
+        </div>
+
+        <!-- Solo Mode Setup Screen -->
+        <div id="solo-setup" class="screen">
+            <div class="join-container">
+                <h2>Solo Practice Mode</h2>
+                <p style="color: var(--color-text-dim); margin-bottom: 20px;">Practice at your own pace!</p>
+
+                <label for="solo-mode">Game Mode:</label>
+                <select id="solo-mode" class="select-field">
+                    <option value="alphabet-word">Alphabet → Word (Spelling)</option>
+                    <option value="word-sentence">Word → Sentence (Grammar)</option>
+                    <option value="mixed-relay">Mixed Relay (Both)</option>
+                </select>
+
+                <label for="solo-difficulty">Difficulty:</label>
+                <select id="solo-difficulty" class="select-field">
+                    <option value="easy">Easy (5 minutes, hints enabled)</option>
+                    <option value="medium" selected>Medium (3 minutes, limited hints)</option>
+                    <option value="hard">Hard (2 minutes, no hints)</option>
+                </select>
+
+                <label for="solo-topic">Topic/Theme:</label>
+                <select id="solo-topic" class="select-field">
+                    <option value="general">General Vocabulary</option>
+                    <option value="academic">Academic Words</option>
+                    <option value="business">Business English</option>
+                    <option value="technology">Technology Terms</option>
+                    <option value="custom">Custom (paste text below)</option>
+                </select>
+
+                <textarea id="solo-custom-text" placeholder="Paste your custom text here (if Custom selected)..." class="textarea-field" style="display: none; min-height: 100px;"></textarea>
+
+                <label for="solo-goal">Your Goal:</label>
+                <select id="solo-goal" class="select-field">
+                    <option value="score">High Score Challenge</option>
+                    <option value="time">Speed Challenge (complete fastest)</option>
+                    <option value="accuracy">Perfect Accuracy (no mistakes)</option>
+                    <option value="practice">Free Practice (no pressure)</option>
+                </select>
+
+                <button id="btn-start-solo" class="action-btn" style="border-color: var(--color-secondary); color: var(--color-secondary);">Start Solo Game</button>
+                <button id="btn-back-solo" class="back-btn">Back</button>
             </div>
         </div>
 
