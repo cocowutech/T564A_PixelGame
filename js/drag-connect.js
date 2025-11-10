@@ -60,11 +60,8 @@ class DragConnect {
         this.currentPath.push(node);
         node.classList.add('selected');
 
-        // Draw connection if not first node
-        if (this.currentPath.length > 1) {
-            const prevNode = this.currentPath[this.currentPath.length - 2];
-            this.drawConnection(prevNode, node);
-        }
+        // Add sequence number to the node (displayed via CSS)
+        node.dataset.sequence = this.currentPath.length;
 
         // Move runner
         const rect = node.getBoundingClientRect();
@@ -210,10 +207,8 @@ class DragConnect {
             node.classList.remove('selected');
             node.classList.add('correct');
             node.classList.add('disabled');
-        });
-
-        this.connections.forEach(line => {
-            line.classList.add('correct');
+            // Remove sequence number when correct
+            delete node.dataset.sequence;
         });
     }
 
@@ -222,10 +217,7 @@ class DragConnect {
         this.currentPath.forEach(node => {
             node.classList.remove('selected');
             node.classList.add('incorrect');
-        });
-
-        this.connections.forEach(line => {
-            line.classList.add('incorrect');
+            // Keep sequence number visible for incorrect answers
         });
 
         // Shake animation
@@ -239,16 +231,10 @@ class DragConnect {
     clearPath() {
         this.currentPath.forEach(node => {
             node.classList.remove('selected', 'incorrect');
+            // Remove sequence numbers
+            delete node.dataset.sequence;
         });
 
-        // Remove incorrect connections
-        this.connections.forEach(line => {
-            if (line.classList.contains('incorrect')) {
-                line.remove();
-            }
-        });
-
-        this.connections = this.connections.filter(line => line.classList.contains('correct'));
         this.currentPath = [];
         this.startNode = null;
 
@@ -262,12 +248,13 @@ class DragConnect {
 
         const lastNode = this.currentPath.pop();
         lastNode.classList.remove('selected');
+        // Remove sequence number
+        delete lastNode.dataset.sequence;
 
-        // Remove last connection
-        const lastConnection = this.connections.pop();
-        if (lastConnection) {
-            lastConnection.remove();
-        }
+        // Re-number remaining nodes
+        this.currentPath.forEach((node, index) => {
+            node.dataset.sequence = index + 1;
+        });
 
         // Move runner back
         if (this.currentPath.length > 0) {

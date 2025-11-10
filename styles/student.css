@@ -138,6 +138,8 @@
     left: 0;
     width: 100%;
     height: 100%;
+    /* Hidden - we use sequence numbers instead of lines */
+    display: none;
     pointer-events: none;
     z-index: 5;
 }
@@ -213,6 +215,27 @@
     border-color: var(--color-accent);
     color: var(--color-bg);
     box-shadow: 0 0 20px var(--color-accent);
+    position: relative;
+}
+
+/* Sequence number badge on selected nodes */
+.node.selected::before {
+    content: attr(data-sequence);
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background-color: var(--color-primary);
+    color: var(--color-bg);
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: bold;
+    border: 2px solid var(--color-accent);
+    z-index: 10;
 }
 
 .node.correct {
@@ -227,6 +250,27 @@
     border-color: var(--color-error);
     color: var(--color-bg);
     animation: shake 0.3s ease;
+    position: relative;
+}
+
+/* Show sequence number on incorrect nodes too */
+.node.incorrect::before {
+    content: attr(data-sequence);
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background-color: var(--color-bg);
+    color: var(--color-error);
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: bold;
+    border: 2px solid var(--color-error);
+    z-index: 10;
 }
 
 .node.disabled {
