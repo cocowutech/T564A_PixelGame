@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pixel Relay: Connect & Compose</title>
+    <title>Word Relay: English Vocabulary Practice</title>
     <link rel="stylesheet" href="styles/main.css">
     <link rel="stylesheet" href="styles/student.css">
     <link rel="stylesheet" href="styles/teacher.css">
@@ -14,11 +14,11 @@
         <!-- Landing Page -->
         <div id="landing-page" class="screen active">
             <div class="title-screen">
-                <h1 class="pixel-title">Pixel Relay</h1>
-                <p class="subtitle">Connect & Compose</p>
+                <h1 class="pixel-title">Word Relay</h1>
+                <p class="subtitle">English Vocabulary Practice</p>
                 <div class="menu-options">
-                    <button id="btn-student" class="menu-btn">Student Mode</button>
-                    <button id="btn-teacher" class="menu-btn">Teacher Control Room</button>
+                    <button id="btn-student" class="menu-btn glowing-btn">Student Mode</button>
+                    <button id="btn-teacher" class="menu-btn disabled-btn">Teacher Control Room</button>
                     <button id="btn-how-to-play" class="menu-btn" style="border-color: var(--color-accent); color: var(--color-accent);">How to Play</button>
                 </div>
             </div>
@@ -27,13 +27,13 @@
         <!-- How to Play Tutorial -->
         <div id="how-to-play" class="screen">
             <div class="tutorial-container">
-                <h2 style="color: var(--color-primary); text-align: center; margin-bottom: 30px;">How to Play Pixel Relay</h2>
+                <h2 style="color: var(--color-primary); text-align: center; margin-bottom: 30px;">How to Play Word Relay</h2>
 
                 <div class="tutorial-content">
                     <!-- Game Overview -->
                     <div class="tutorial-section">
                         <h3>🎮 Game Overview</h3>
-                        <p>Pixel Relay is a fast-paced English learning game where you click to connect letters→words→sentences with an 8-bit pixel runner. Play solo to practice or join a classroom game to compete with your team!</p>
+                        <p>Word Relay is a fast-paced English vocabulary learning game where you click to connect letters→words→sentences with an 8-bit pixel runner. Practice spelling and grammar skills solo or compete with your class!</p>
                     </div>
 
                     <!-- Game Modes -->
@@ -219,8 +219,9 @@
                 <div class="mode-divider">
                     <h3 style="color: var(--color-accent); font-size: 14px; margin: 20px 0 10px 0;">Join Multiplayer</h3>
                 </div>
-                <input type="text" id="room-code" placeholder="Room Code" class="input-field">
-                <button id="btn-join" class="action-btn">Join Room</button>
+                <input type="text" id="room-code" placeholder="Room Code" class="input-field disabled-input" disabled>
+                <button id="btn-join" class="action-btn disabled-btn">Join Room</button>
+                <p id="multiplayer-note" class="coming-soon-note" role="status" aria-live="polite">🔜 Multiplayer is coming soon — Solo Practice is available now. We'll enable rooms shortly.</p>
 
                 <div class="mode-divider">
                     <h3 style="color: var(--color-accent); font-size: 14px; margin: 20px 0 10px 0;">Or Play Solo</h3>

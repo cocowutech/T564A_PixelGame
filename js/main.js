@@ -28,10 +28,9 @@ class App {
             studentController.init();
         });
 
-        // Teacher mode
+        // Teacher mode - Coming Soon
         teacherBtn.addEventListener('click', () => {
-            this.showScreen('teacher-setup');
-            teacherController.init();
+            alert('🚀 Teacher Control Room Coming Soon!\n\nWe\'re preparing this feature. Stay tuned!');
         });
 
         // How to Play

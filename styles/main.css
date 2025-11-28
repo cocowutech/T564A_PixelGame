@@ -159,6 +159,67 @@ body::before {
     transform: translateY(0);
 }
 
+/* Glowing Button - Student Mode */
+.glowing-btn {
+    border-color: var(--color-success) !important;
+    color: var(--color-success) !important;
+    box-shadow: 0 0 15px rgba(0, 255, 159, 0.7), 0 0 25px rgba(0, 255, 159, 0.4) !important;
+    animation: glow 2s ease-in-out infinite;
+}
+
+.glowing-btn:hover {
+    background-color: var(--color-success);
+    color: var(--color-bg);
+    box-shadow: 0 0 25px var(--color-success), 0 0 40px rgba(0, 255, 159, 0.5) !important;
+}
+
+@keyframes glow {
+    0%, 100% {
+        box-shadow: 0 0 10px rgba(0, 255, 159, 0.7), 0 0 25px rgba(0, 255, 159, 0.4) !important;
+    }
+    50% {
+        box-shadow: 0 0 20px rgba(0, 255, 159, 0.9), 0 0 35px rgba(0, 255, 159, 0.6) !important;
+    }
+}
+
+/* Disabled Button - Coming Soon */
+.disabled-btn {
+    border-color: var(--color-text-dim);
+    color: var(--color-text-dim);
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.disabled-btn:hover {
+    background-color: transparent;
+    color: var(--color-text-dim);
+    box-shadow: none;
+    transform: none;
+}
+
+/* Disabled input appearance */
+.disabled-input {
+    background-color: rgba(255,255,255,0.03);
+    border: 2px dashed var(--color-text-dim);
+    color: var(--color-text-dim);
+    cursor: not-allowed;
+    opacity: 0.75;
+}
+
+/* Inline note for upcoming features beneath controls */
+.coming-soon-note {
+    margin-top: 10px;
+    font-size: 13px;
+    color: var(--color-text-dim);
+    text-align: left;
+    max-width: 320px;
+    line-height: 1.3;
+}
+
+.coming-soon-note strong {
+    color: var(--color-accent);
+}
+
 .back-btn {
     border-color: var(--color-text-dim);
     color: var(--color-text-dim);

@@ -26,34 +26,41 @@ class StudentController {
         const roomCodeInput = document.getElementById('room-code');
 
         // Multiplayer join
-        joinBtn.addEventListener('click', async () => {
-            const name = studentNameInput.value.trim();
-            const code = roomCodeInput.value.trim();
+        // If the Join button is marked as disabled (coming soon), show a friendly alert.
+        if (joinBtn.classList.contains('disabled-btn')) {
+            joinBtn.addEventListener('click', () => {
+                alert('🔜 Multiplayer Join Coming Soon!\n\nWe\'re preparing multiplayer rooms. Solo practice is available now.');
+            });
+        } else {
+            joinBtn.addEventListener('click', async () => {
+                const name = studentNameInput.value.trim();
+                const code = roomCodeInput.value.trim();
 
-            if (!name || !code) {
-                this.showFeedback('Please enter your name and room code', 'error');
-                return;
-            }
+                if (!name || !code) {
+                    this.showFeedback('Please enter your name and room code', 'error');
+                    return;
+                }
 
-            try {
-                joinBtn.disabled = true;
-                joinBtn.textContent = 'Joining...';
+                try {
+                    joinBtn.disabled = true;
+                    joinBtn.textContent = 'Joining...';
 
-                const roomData = await gameState.joinRoom(name, code);
-                this.currentMode = roomData.mode;
-                this.timeRemaining = roomData.duration;
+                    const roomData = await gameState.joinRoom(name, code);
+                    this.currentMode = roomData.mode;
+                    this.timeRemaining = roomData.duration;
 
-                this.showStudentBoard();
-                this.setupGameBoard(roomData);
-                this.startListening();
+                    this.showStudentBoard();
+                    this.setupGameBoard(roomData);
+                    this.startListening();
 
-                this.showFeedback('Joined successfully! Waiting for game to start...', 'success');
-            } catch (error) {
-                this.showFeedback(error.message || 'Failed to join room', 'error');
-                joinBtn.disabled = false;
-                joinBtn.textContent = 'Join';
-            }
-        });
+                    this.showFeedback('Joined successfully! Waiting for game to start...', 'success');
+                } catch (error) {
+                    this.showFeedback(error.message || 'Failed to join room', 'error');
+                    joinBtn.disabled = false;
+                    joinBtn.textContent = 'Join';
+                }
+            });
+        }
 
         // Solo mode
         soloBtn.addEventListener('click', () => {
@@ -157,10 +164,10 @@ class StudentController {
         }
 
         const texts = {
-            general: "Learning wonderful process helps students develop skills through practice dedication. Knowledge grows stronger when challenge yourself daily. Success comes from persistent effort continuous improvement.",
-            academic: "Research demonstrates significant correlation between vocabulary acquisition academic achievement. Scholars investigate phenomena utilizing empirical methodologies rigorous analysis. Comprehension facilitates effective communication professional contexts.",
-            business: "Marketing strategy requires comprehensive analysis customer behavior market trends. Management focuses maximizing productivity efficiency organizational performance. Leadership involves strategic decision making effective communication.",
-            technology: "Software development requires systematic approach problem solving debugging. Programming languages enable developers create innovative applications solutions. Technology advances rapidly requiring continuous learning adaptation."
+            general: "Learning wonderful process helps students develop skills through practice dedication. Knowledge grows stronger when challenge yourself daily. Success comes from persistent effort continuous improvement. Education powerful tool transform lives create opportunities. Students motivated achieve goals through determination courage commitment. Teachers inspire guide support learners entire journey. Inspiration grows when surround yourself passionate dedicated people.",
+            academic: "Research demonstrates significant correlation between vocabulary acquisition academic achievement. Scholars investigate phenomena utilizing empirical methodologies rigorous analysis. Comprehension facilitates effective communication professional contexts. Literature explores universal themes human condition society. Historical events shaped modern world influence contemporary culture. Scientific discoveries revolutionize understanding natural phenomena universe. Mathematics provides foundation rational thinking problem solving abilities.",
+            business: "Marketing strategy requires comprehensive analysis customer behavior market trends. Management focuses maximizing productivity efficiency organizational performance. Leadership involves strategic decision making effective communication. Innovation drives competitive advantage creates sustainable growth. Customer satisfaction loyalty essential achieving business success. Teams collaboration cooperation achieve ambitious organizational objectives. Entrepreneurs build companies solve real problems create value.",
+            technology: "Software development requires systematic approach problem solving debugging. Programming languages enable developers create innovative applications solutions. Technology advances rapidly requiring continuous learning adaptation. Artificial intelligence transforms industries revolutionizes business models. Cloud computing provides flexible scalable infrastructure solutions. Cybersecurity protects valuable data prevents malicious attacks. Digital transformation reshapes how businesses operate serve customers."
         };
 
         return texts[topic] || texts.general;
@@ -171,12 +178,12 @@ class StudentController {
 
         if (mode === 'alphabet-word' || mode === 'mixed-relay') {
             const words = sourceText.match(/\b[a-zA-Z]{5,}\b/g) || [];
-            targets.words = [...new Set(words)].slice(0, 8).map(word => word.toLowerCase());
+            targets.words = [...new Set(words)].slice(0, 15).map(word => word.toLowerCase());
         }
 
         if (mode === 'word-sentence' || mode === 'mixed-relay') {
             const sentences = sourceText.match(/[^.!?]+[.!?]/g) || [];
-            targets.sentences = sentences.slice(0, 3).map(s => s.trim());
+            targets.sentences = sentences.slice(0, 8).map(s => s.trim());
         }
 
         return targets;
